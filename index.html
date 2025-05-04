@@ -91,16 +91,24 @@
                     const timestamp = new Date().toISOString();
                     logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)}`);
 
+                    // Отправка данных на Webhook.site
                     fetch('https://webhook.site/a3a94329-1da3-4ba4-80e1-e68292640044', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ latitude: lat, longitude: lon, timestamp })
+                        body: JSON.stringify({ latitude: lat, longitude: lon, timestamp }),
+                        mode: 'cors',
+                        keepalive: true
                     })
                     .then(response => {
-                        if (!response.ok) throw new Error("Ошибка отправки");
-                        console.log("[GeoDebug] Данные отправлены");
+                        if (!response.ok) {
+                            throw new Error(`HTTP ошибка: ${response.status}`);
+                        }
+                        console.log("[GeoDebug] Данные отправлены успешно");
                     })
-                    .catch(error => logMessage("Ошибка отправки: " + error.message));
+                    .catch(error => {
+                        console.error("[GeoDebug] Ошибка отправки:", error);
+                        logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)} (Ошибка отправки: ${error.message})`);
+                    });
                 },
                 error => {
                     let message;
