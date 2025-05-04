@@ -104,21 +104,17 @@
                     document.getElementById("stopButton").style.display = "inline-block";
 
                     // Отправка данных на Webhook.site
+                    // Для теста можно заменить на: https://httpbin.org/post
                     fetch('https://webhook.site/5a25303b-7980-421c-841b-0cfa78e52280', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ latitude: lat, longitude: lon, timestamp }),
-                        mode: 'cors',
-                        keepalive: true
+                        mode: 'no-cors' // Для обхода CORS
                     })
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
-                        }
-                        console.log("[GeoDebug] Данные отправлены успешно");
+                        console.log("[GeoDebug] Ответ сервера:", response);
                         logMessage(`Геолокация: Широта ${lat.toFixed(4)}, Долгота ${lon.toFixed(4)} (Отправлено)`);
                     })
                     .catch(error => {
